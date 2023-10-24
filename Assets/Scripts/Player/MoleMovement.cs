@@ -31,10 +31,22 @@ public class MoleMovement : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
 
         HandleRotation(target);
-        HandlePositionLimits();
         HandleParticles();
 
+        if(Vector3ToInt(previousPos) != Vector3ToInt(transform.position))
+        {
+            HandlePositionLimits();
+        }
+
         previousPos = transform.position;
+    }
+
+    private Vector3Int Vector3ToInt(Vector3 v)
+    {
+        int x = (int)v.x;
+        int y = (int)v.y;
+        int z = (int)v.z;
+        return new Vector3Int(x, y, z);
     }
 
     private void HandleRotation(Vector3 target)

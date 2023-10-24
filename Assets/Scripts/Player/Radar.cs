@@ -31,7 +31,7 @@ public class Radar : MonoBehaviour
             colliderList.Clear();
         }
 
-        for (float i = sweepTransform.eulerAngles.z; i < angleLastFrame; i += 0.2f)
+        for (float i = sweepTransform.eulerAngles.z; i < angleLastFrame; i += 0.5f)
         {
             float angleRad = i * Mathf.Deg2Rad;
             Vector3 angleVector = new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad));

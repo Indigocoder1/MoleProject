@@ -44,7 +44,7 @@ public class EvaluateManager : MonoBehaviour
 
     private void GoToMainMenu()
     {
-        sceneLoader.LoadScene(0);
+        sceneLoader.LoadSceneAsync(0);
     }
 
     private void CloseTab()
