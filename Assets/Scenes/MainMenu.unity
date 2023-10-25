@@ -640,6 +640,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1605272761}
+        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
+        m_MethodName: SaveSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 492659979}
         m_TargetAssemblyTypeName: TabManager, Assembly-CSharp
         m_MethodName: SetActiveTab
@@ -927,12 +939,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Use your mole radar to find collect all the elements!\nThe mole will follow
-    your mouse or your finger on touchscreen. \nOnce you've collected all the elements
-    click \"Finish\" in the top left to enter the element comparison screen. \nOnce
-    there, drag the element you think has the correct mass into the slot in the center
-    of the screen, and click \"Check\". \nThe screen that pops up will tell you if
-    you're correct."
+  m_text: "Use your mole radar to find & collect all the elements!\nThe mole will
+    follow your mouse or your finger on touchscreen. \nOnce you've collected all
+    the elements click \"Finish\" in the top left to enter the element comparison
+    screen. \nOnce there, drag the element you think has the correct mass into the
+    slot in the center of the screen, and click \"Check\". \nThe screen that pops
+    up will tell you if you're correct."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: db5ed1e22a68115419ab2d5096633273, type: 2}
   m_sharedMaterial: {fileID: 6252462820777113858, guid: db5ed1e22a68115419ab2d5096633273, type: 2}
@@ -959,8 +971,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 62.9
-  m_fontSizeBase: 62.9
+  m_fontSize: 55.2
+  m_fontSizeBase: 55.2
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

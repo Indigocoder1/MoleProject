@@ -61,7 +61,7 @@ public class MoleMovement : MonoBehaviour
         Vector3 pos = transform.position;
 
         if (pos.x < 1 || pos.x > proceduralGeneration.GetMapSize().x ||
-            pos.y > proceduralGeneration.GetPerlinHeightArray()[(int)pos.x] || pos.y < 0)
+            pos.y > proceduralGeneration.GetPerlinHeightArray()[(int)pos.x] || pos.y < 1)
         {
             transform.position = new Vector3(previousPos.x, previousPos.y, transform.position.z);
         }

@@ -231,8 +231,8 @@ public class ProceduralGeneration : MonoBehaviour
 
     public Vector2Int GetSpawnPosition()
     {
-        int x = Random.Range(0, width);
-        int y = Random.Range(0, perlinHeightArray[x]);
+        int x = Random.Range(1, width - 1);
+        int y = Random.Range(1, perlinHeightArray[x] - 1);
 
         return new Vector2Int(x, y);
     }

@@ -38,8 +38,6 @@ public class SettingsManager : MonoBehaviour
 
         if (currentIndex == 0 && currentIndex != previousSceneIndex)
         {
-            Debug.Log("In main menu");
-
             mapWidthSlider.value = mapWidth;
             mapHeightSlider.value = mapHeight;
             mapSeedSlider.value = mapSeed;

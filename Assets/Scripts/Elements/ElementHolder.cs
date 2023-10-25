@@ -20,7 +20,7 @@ public class ElementHolder : MonoBehaviour
             finalizeButton.interactable = true;
             if(selectedSlot.GetChild(0).TryGetComponent<PeriodicTable.Element>(out PeriodicTable.Element element))
             {
-                selectedElementText.text = $"Selected Element: {element.elementName} ({element.atomicMass}g)";
+                selectedElementText.text = $"Selected Element: {element.elementName} (#{element.atomicNumber} | {element.atomicMass}g)";
                 currentElement = element;
             }
         }

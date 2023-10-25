@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.K))
         {
-            GetComponent<SceneLoader>().LoadScene(0);
+            FindObjectOfType<SceneLoader>().LoadScene(0);
         }
     }
 #endif

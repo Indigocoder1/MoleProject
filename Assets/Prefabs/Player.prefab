@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultSpeed: 11
-  superSpeed: 18
+  superSpeed: 22
   visualTransform: {fileID: 20550437488680615}
   proceduralGeneration: {fileID: 0}
   dirtParticleSystem: {fileID: 2490008728682314718}

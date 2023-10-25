@@ -395,7 +395,7 @@ Transform:
   - {fileID: 7699258344050849597}
   - {fileID: 7699258343452408264}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7699258344391641030
 MonoBehaviour:
@@ -415,5 +415,5 @@ MonoBehaviour:
   pingPrefab: {fileID: 8242968881762575195, guid: 870a7f70cb5cfee4db492d9ca672a06e, type: 3}
   sweepTransform: {fileID: 7699258344050849597}
   defaultRotationSpeed: 180
-  fastRotationSpeed: 280
+  fastRotationSpeed: 360
   radarDistance: 300
