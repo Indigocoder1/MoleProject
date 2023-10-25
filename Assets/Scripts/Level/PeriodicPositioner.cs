@@ -15,12 +15,14 @@ public class PeriodicPositioner : MonoBehaviour
     private List<Vector2Int> spawnedPointPositions = new List<Vector2Int>();
     private bool exactQuantityAdded;
     private List<int> elementsAdded = new List<int>();
+    private int elementsAddedSoFar;
+    private int elementsToSpawn;
 
     private IEnumerator Start()
     {
         yield return ProceduralGeneration.IsReady;
 
-        int elementsToSpawn = Random.Range(SettingsManager.minElements, SettingsManager.maxElements);
+        elementsToSpawn = Random.Range(SettingsManager.minElements, SettingsManager.maxElements);
         GameManager.Instance.SetSpawnedElementCount(elementsToSpawn);
         for (int i = 0; i < elementsToSpawn; i++)
         {
@@ -30,32 +32,38 @@ public class PeriodicPositioner : MonoBehaviour
             spawnedPointPositions.Add(position);
             Element element = GetRandomElement(out int elementNumber);
 
-            GameObject prefab = Instantiate(elementPrefab, new Vector3(position.x, position.y, -0.1f), Quaternion.identity);
-            Element prefabElement = prefab.AddComponent<Element>();
-            prefabElement.listIndex = elementNumber;
-            prefabElement.atomicNumber = element.atomicNumber;
-            prefabElement.symbol = element.symbol;
-            prefabElement.elementName = element.elementName;
-            prefabElement.atomicMass = element.atomicMass;
-            prefabElement.elementColor = element.elementColor;
-
-            if(!exactQuantityAdded && Random.Range(0f, 100f) > 50)
-            {
-                exactQuantityAdded = true;
-            }
-            else if(i == elementsToSpawn - 1 && !exactQuantityAdded)
-            {
-                exactQuantityAdded = true;
-            }
-            else
-            {
-                float variation = MathF.Round(prefabElement.atomicMass + Random.Range(-5f, 5f), 2);
-                prefabElement.atomicMass = variation;
-            }
-
-            TMP_Text text = prefab.GetComponentInChildren<TMP_Text>();
-            text.text = $"{prefabElement.elementName}<sup>{prefabElement.atomicMass.ToString("F")}g</sup>";
+            SpawnElement(element, elementNumber, position);
         }
+    }
+
+    public void SpawnElement(Element element, int elementNumber, Vector2 position)
+    {
+        GameObject prefab = Instantiate(elementPrefab, new Vector3(position.x, position.y, -0.1f), Quaternion.identity);
+        Element prefabElement = prefab.AddComponent<Element>();
+        prefabElement.listIndex = elementNumber;
+        prefabElement.atomicNumber = element.atomicNumber;
+        prefabElement.symbol = element.symbol;
+        prefabElement.elementName = element.elementName;
+        prefabElement.atomicMass = element.atomicMass;
+        prefabElement.elementColor = element.elementColor;
+
+        if (!exactQuantityAdded && Random.Range(0f, 100f) > 50)
+        {
+            exactQuantityAdded = true;
+        }
+        else if (elementsAddedSoFar == elementsToSpawn - 1 && !exactQuantityAdded)
+        {
+            exactQuantityAdded = true;
+        }
+        else
+        {
+            float variation = MathF.Round(prefabElement.atomicMass + Random.Range(-5f, 5f), 2);
+            prefabElement.atomicMass = variation;
+        }
+
+        TMP_Text text = prefab.GetComponentInChildren<TMP_Text>();
+        text.text = $"{prefabElement.elementName}<sup>{prefabElement.atomicMass.ToString("F")}g</sup>";
+        elementsAddedSoFar++;
     }
 
     private Vector2Int GetSpacedPosition(float minSpacingDistance)

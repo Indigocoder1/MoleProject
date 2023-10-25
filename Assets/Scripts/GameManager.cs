@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text elementsLeftText;
     [SerializeField] private Button finishButton;
 
+    [Header("Debugging")]
+    [SerializeField] private PeriodicPositioner periodicPositioner;
+
     private int spawnedElementCount;
     private List<PeriodicTable.Element> pickedUpElements = new();
 
@@ -35,20 +38,20 @@ public class GameManager : MonoBehaviour
         finishButton.interactable = false;
     }
 
-#if UNITY_EDITOR
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Z))
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             FinishCollection();
         }
 
-        if(Input.GetKeyDown(KeyCode.K))
+        if(Input.GetKeyDown(KeyCode.L))
         {
             FindObjectOfType<SceneLoader>().LoadScene(0);
         }
-    }
 #endif
+    }
 
     public void SetSpawnedElementCount(int count)
     {

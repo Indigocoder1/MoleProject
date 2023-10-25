@@ -63,7 +63,7 @@ public static class PeriodicTable
             new Element(26, "Fe", "Iron", 55.85f),
             new Element(27, "Co", "Cobalt", 58.93f),
             new Element(28, "Ni", "Nickel", 58.69f),
-            new Element(29, "Cu", "Copper", 63.55f, new Color(252, 186, 3)),
+            new Element(29, "Cu", "Copper", 63.55f),
             new Element(30, "Zn", "Zinc", 65.39f),
             new Element(31, "Ga", "Gallium", 69.72f),
             new Element(32, "Ge", "Germanium", 72.61f),

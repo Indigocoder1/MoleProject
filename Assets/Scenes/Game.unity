@@ -2010,6 +2010,7 @@ MonoBehaviour:
   elementSelectorGameobject: {fileID: 1759447263}
   elementsLeftText: {fileID: 1721217828}
   finishButton: {fileID: 84003567}
+  periodicPositioner: {fileID: 1505180728}
 --- !u!1 &1128736291
 GameObject:
   m_ObjectHideFlags: 0
