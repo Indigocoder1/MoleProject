@@ -8,15 +8,19 @@ using Random = UnityEngine.Random;
 
 public class PeriodicPositioner : MonoBehaviour
 {
+    private const int maxIterationNum = 10;
+
     [SerializeField] private ProceduralGeneration proceduralGeneration;
     [SerializeField] private GameObject elementPrefab;
     [Range(0, 250f)]
     [SerializeField] private float minSpacingDistance;
+
     private List<Vector2Int> spawnedPointPositions = new List<Vector2Int>();
     private bool exactQuantityAdded;
     private List<int> elementsAdded = new List<int>();
     private int elementsAddedSoFar;
     private int elementsToSpawn;
+    private int currentIterationNum;
 
     private IEnumerator Start()
     {
@@ -27,7 +31,7 @@ public class PeriodicPositioner : MonoBehaviour
         for (int i = 0; i < elementsToSpawn; i++)
         {
             float minSpacingDistance = proceduralGeneration.GetMapSize().magnitude * (this.minSpacingDistance / 1000);
-            Vector2Int position = GetSpacedPosition(minSpacingDistance);
+            Vector2Int position = GetSpacedPosition(minSpacingDistance, 0);
 
             spawnedPointPositions.Add(position);
             Element element = GetRandomElement(out int elementNumber);
@@ -66,22 +70,27 @@ public class PeriodicPositioner : MonoBehaviour
         elementsAddedSoFar++;
     }
 
-    private Vector2Int GetSpacedPosition(float minSpacingDistance)
+    private Vector2Int GetSpacedPosition(float minSpacingDistance, int iterationNum)
     {
         Vector2Int pos = proceduralGeneration.GetSpawnPosition();
         Vector2Int highestPoint = proceduralGeneration.GetHighestPoint();
         Vector3 characterPosition = new Vector3(highestPoint.x, highestPoint.y - 5, 0);
 
+        if (iterationNum > maxIterationNum)
+        {
+            return pos;
+        }
+
         for (int i = 0; i < spawnedPointPositions.Count; i++)
         {
             if(Vector2.Distance(pos, spawnedPointPositions[i]) <= minSpacingDistance)
             {
-                pos = GetSpacedPosition(minSpacingDistance);
+                pos = GetSpacedPosition(minSpacingDistance, iterationNum + 1);
             }
 
             if(Vector2.Distance(pos, characterPosition) <= minSpacingDistance)
             {
-                pos = GetSpacedPosition(minSpacingDistance);
+                pos = GetSpacedPosition(minSpacingDistance, iterationNum + 1);
             }
         }
 
@@ -92,6 +101,7 @@ public class PeriodicPositioner : MonoBehaviour
     {
         Element element = null;
         int elementNumber = Random.Range(1, SettingsManager.maxAtomicNumber);
+
         if(!elementsAdded.Contains(elementNumber))
         {
             element = Table.elements[elementNumber];

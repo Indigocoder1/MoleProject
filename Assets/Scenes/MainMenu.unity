@@ -4171,6 +4171,10 @@ MonoBehaviour:
   caveTile: {fileID: 11400000, guid: 2c3a2c790522e364c8f8d758e5e002bc, type: 2}
   borderTile: {fileID: 11400000, guid: ecba58e0de463b140baaab14bd86c002, type: 2}
   tileMap: {fileID: 1809420038}
+  enableLoadingBar: 0
+  sceneLoader: {fileID: 0}
+  loadingBarMask: {fileID: 0}
+  characterPositioner: {fileID: 1545403649}
   overrideWidth: 500
   overrideHeight: 150
   overrideSeed: 0

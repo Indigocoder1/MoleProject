@@ -21,6 +21,7 @@ public class MoleMovement : MonoBehaviour
     {
         if (!ProceduralGeneration.IsReady)
         {
+            Debug.Log("Proc gen not ready!");
             return;
         }
 
@@ -31,12 +32,13 @@ public class MoleMovement : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
 
         HandleRotation(target);
-        HandleParticles();
 
         if(Vector3ToInt(previousPos) != Vector3ToInt(transform.position))
         {
             HandlePositionLimits();
         }
+
+        HandleParticles();
 
         previousPos = transform.position;
     }

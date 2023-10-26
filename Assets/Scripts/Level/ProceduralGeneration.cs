@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class ProceduralGeneration : MonoBehaviour
 {
@@ -25,6 +27,14 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] private TileBase borderTile;
     [SerializeField] private Tilemap tileMap;
 
+    [Header("Loading")]
+    [SerializeField] private bool enableLoadingBar;
+    [SerializeField] private SceneLoader sceneLoader;
+    [SerializeField] private Image loadingBarMask;
+
+    [Header("Other")]
+    [SerializeField] private CharacterPositioner characterPositioner;
+
     [Header("Overrides")]
     [SerializeField] private int overrideWidth;
     [SerializeField] private int overrideHeight;
@@ -33,6 +43,9 @@ public class ProceduralGeneration : MonoBehaviour
     private int width;
     private int height;
     private float seed;
+    private int rowsCompleted;
+    private bool mapGenCompleted;
+    private bool mapGenStarted;
 
     private int[,] map;
 
@@ -40,7 +53,7 @@ public class ProceduralGeneration : MonoBehaviour
     {
         width = overrideWidth != 0 ? overrideWidth : SettingsManager.mapWidth;
         height = overrideHeight != 0 ? overrideHeight : SettingsManager.mapHeight;
-        seed = overrideSeed != 0? overrideSeed : SettingsManager.mapSeed;
+        seed = overrideSeed != 0 ? overrideSeed : SettingsManager.mapSeed;
 
         perlinHeightArray = new int[width];
         StartCoroutine(Generate());
@@ -50,15 +63,34 @@ public class ProceduralGeneration : MonoBehaviour
     {
         IsReady = false;
 
-        tileMap.ClearAllTiles();
-        map = GenerateArray(width, height, true);
-        map = GenerateTerrain(map);
+        if(!mapGenStarted)
+        {
+            if(enableLoadingBar)
+            {
+                sceneLoader.SetText("Loading Terrain...");
+                sceneLoader.EnableLoadingScreen(false);
+                yield return sceneLoader.ReachedTargetAlpha();
+                yield return new WaitForSeconds(2f);
+            }
+            tileMap.ClearAllTiles();
+            map = GenerateArray(width, height, true);
+            map = GenerateTerrain(map);
+        }
+
+        yield return mapGenCompleted;
+
         SmoothMap(smoothAmount);
         AddMapTiles(map, groundTile, caveTile);
         GenerateBorderTiles();
-        highestPoint = FindHighestPoint();
 
         yield return new WaitForEndOfFrame();
+
+        if(enableLoadingBar)
+        {
+            sceneLoader.DisableLoadingScreen();
+        }
+
+        characterPositioner.PositionCharacter();
 
         IsReady = true;
     }
@@ -79,6 +111,9 @@ public class ProceduralGeneration : MonoBehaviour
 
     private int[,] GenerateTerrain(int[,] map)
     {
+        int highestX = int.MinValue;
+        int highestY = int.MinValue;
+
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());
         int perlinHeight;
         for (int x = 0; x < width; x++)
@@ -90,8 +125,23 @@ public class ProceduralGeneration : MonoBehaviour
             {
                 map[x, y] = pseudoRandom.Next(1, 100) < randomFillPercent ? 1 : 2;
             }
+
+            if(perlinHeight > highestY)
+            {
+                highestX = x;
+                highestY = perlinHeight;
+            }
+
+            rowsCompleted++;
+            if(enableLoadingBar)
+            {
+                loadingBarMask.fillAmount = rowsCompleted / width;
+            }
         }
 
+        highestPoint = new Vector2Int(highestX, highestY);
+
+        mapGenCompleted = true;
         return map;
     }
 
@@ -194,26 +244,6 @@ public class ProceduralGeneration : MonoBehaviour
         }
     }
 
-    private Vector2Int FindHighestPoint()
-    {
-        int highestY = int.MinValue;
-        int highestX = int.MinValue;
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < perlinHeightArray[x]; y++)
-            {
-                if (map[x,y] == 1 && y > highestY)
-                {
-                    highestY = y;
-                    highestX = x;
-                }
-            }
-        }
-
-        return new Vector2Int(highestX, highestY);
-    }
-
     public Vector2Int GetHighestPoint()
     {
         return highestPoint;
@@ -231,8 +261,8 @@ public class ProceduralGeneration : MonoBehaviour
 
     public Vector2Int GetSpawnPosition()
     {
-        int x = Random.Range(1, width - 1);
-        int y = Random.Range(1, perlinHeightArray[x] - 1);
+        int x = Random.Range(2, width - 1);
+        int y = Random.Range(2, perlinHeightArray[x] - 1);
 
         return new Vector2Int(x, y);
     }

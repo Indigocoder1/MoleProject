@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,33 +8,69 @@ public class SceneLoader : MonoBehaviour
 {
     [SerializeField] private Image progressBarMask;
     [SerializeField] private GameObject progressBarCanvas;
+    [SerializeField] private TextMeshProUGUI headerText;
+    private CanvasGroup canvasGroup;
+    private float targetAlpha;
+    private const float fadeSpeed = 3f;
+
+    private void Start()
+    {
+        canvasGroup = progressBarCanvas.GetComponent<CanvasGroup>();
+    }
 
     public void LoadScene(int index)
     {
+        SetText("Loading...");
         SceneManager.LoadScene(index);
     }
 
     public void LoadScene(string name)
     {
+        SetText("Loading...");
         SceneManager.LoadScene(name);
     }
 
     public void LoadSceneAsync(int index)
     {
-        CanvasGroup group = progressBarCanvas.GetComponent<CanvasGroup>();
-        group.alpha = 0f;
-        StartCoroutine(LoadAsynchronously(index, group));
+        SetText("Loading...");
+        canvasGroup.alpha = 0f;
+        StartCoroutine(LoadAsynchronously(index));
     }
 
-    private IEnumerator LoadAsynchronously(int index, CanvasGroup group)
+    public void EnableLoadingScreen(bool fade = true)
     {
-        while(group.alpha < 1)
+        if(!fade)
         {
-            group.alpha += Time.deltaTime * 3f;
-            yield return null;
+            canvasGroup.alpha = 1;
         }
 
-        yield return new WaitForSeconds(0.25f);
+        targetAlpha = 1;
+    }
+
+    public void DisableLoadingScreen()
+    {
+        targetAlpha = 0;
+    }
+
+    public void SetText(string text)
+    {
+        headerText.text = text;
+    }
+
+    public bool ReachedTargetAlpha()
+    {
+        return Mathf.Approximately(canvasGroup.alpha, targetAlpha);
+    }
+
+    private IEnumerator LoadAsynchronously(int index)
+    {
+        if(canvasGroup.alpha < 1)
+        {
+            EnableLoadingScreen();
+        }
+
+        yield return canvasGroup.alpha >= 1;
+        yield return new WaitForSeconds(0.5f);
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(index);
 
@@ -43,6 +80,14 @@ public class SceneLoader : MonoBehaviour
             progressBarMask.fillAmount = progress;
 
             yield return null;
+        }
+    }
+
+    private void Update()
+    {
+        if(canvasGroup.alpha != targetAlpha)
+        {
+            canvasGroup.alpha = Mathf.MoveTowards(canvasGroup.alpha, targetAlpha, Time.deltaTime * fadeSpeed);
         }
     }
 }

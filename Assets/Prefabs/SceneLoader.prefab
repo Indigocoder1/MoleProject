@@ -330,6 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   progressBarMask: {fileID: 2392947714664514547}
   progressBarCanvas: {fileID: 2392947714235181591}
+  headerText: {fileID: 2392947715809274676}
 --- !u!1 &2392947714753647399
 GameObject:
   m_ObjectHideFlags: 0

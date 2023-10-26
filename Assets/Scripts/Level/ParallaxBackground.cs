@@ -26,6 +26,7 @@ public class ParallaxBackground : MonoBehaviour
         float reductionValue = screenSize.magnitude / baseResolution.magnitude;
         parallaxEffectMultiplier = new Vector2(parallaxEffectMultiplier.x * reductionValue, parallaxEffectMultiplier.y * reductionValue * 1.25f);
 
+        yield return new WaitForEndOfFrame();
         lastCameraPosition = cameraTransform.position;
         transform.position = new Vector3(lastCameraPosition.x, lastCameraPosition.y, transform.position.z);
 
@@ -55,5 +56,11 @@ public class ParallaxBackground : MonoBehaviour
             float offsetPositionX = (cameraTransform.position.x - transform.position.x) % textureUnitSizeX;
             transform.position = new Vector3(cameraTransform.position.x + offsetPositionX, transform.position.y);
         }
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        lastCameraPosition = new Vector3(position.x, position.y, lastCameraPosition.z);
+        transform.position = position;
     }
 }
