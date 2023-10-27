@@ -45,7 +45,7 @@ public class ProceduralGeneration : MonoBehaviour
     private float seed;
     private int rowsCompleted;
     private bool mapGenCompleted;
-    private bool mapGenStarted;
+    private bool mapSmoothed;
 
     private int[,] map;
 
@@ -56,40 +56,26 @@ public class ProceduralGeneration : MonoBehaviour
         seed = overrideSeed != 0 ? overrideSeed : SettingsManager.mapSeed;
 
         perlinHeightArray = new int[width];
-        StartCoroutine(Generate());
+        IsReady = false;
+        Generate();
     }
 
-    private IEnumerator Generate()
+    private void Generate()
     {
-        IsReady = false;
+        Debug.Log("Started generation");
 
-        if(!mapGenStarted)
-        {
-            if(enableLoadingBar)
-            {
-                sceneLoader.SetText("Loading Terrain...");
-                sceneLoader.EnableLoadingScreen(false);
-                yield return sceneLoader.ReachedTargetAlpha();
-                yield return new WaitForSeconds(2f);
-            }
-            tileMap.ClearAllTiles();
-            map = GenerateArray(width, height, true);
-            map = GenerateTerrain(map);
-        }
+        tileMap.ClearAllTiles();
+        map = GenerateArray(width, height, true);
+        map = GenerateTerrain(map);
 
-        yield return mapGenCompleted;
-
+        Debug.Log("Smoothing map");
         SmoothMap(smoothAmount);
         AddMapTiles(map, groundTile, caveTile);
+        Debug.Log("Creating border tiles");
         GenerateBorderTiles();
+        mapSmoothed = true;
 
-        yield return new WaitForEndOfFrame();
-
-        if(enableLoadingBar)
-        {
-            sceneLoader.DisableLoadingScreen();
-        }
-
+        Debug.Log("Positioning character");
         characterPositioner.PositionCharacter();
 
         IsReady = true;
@@ -113,6 +99,7 @@ public class ProceduralGeneration : MonoBehaviour
     {
         int highestX = int.MinValue;
         int highestY = int.MinValue;
+        Debug.Log("Generating terrain");
 
         System.Random pseudoRandom = new System.Random(seed.GetHashCode());
         int perlinHeight;
@@ -141,7 +128,6 @@ public class ProceduralGeneration : MonoBehaviour
 
         highestPoint = new Vector2Int(highestX, highestY);
 
-        mapGenCompleted = true;
         return map;
     }
 
